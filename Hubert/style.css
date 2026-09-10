@@ -1,0 +1,1637 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&display=swap');
+
+:root {
+    --background-colour: #1e1e1e;
+    --panel-colour: #474747;
+    --text-colour: #e7efede9;
+    --text-muted: #9aa0a6;
+    --text-secondary: #cfd3d6;
+    --text-tertiary: #b7bcc1;
+    --surface-1: #3a3a3a;
+    --surface-2: #333333;
+    --surface-3: #2c2c2c;
+    --surface-raised: #262626;
+    --surface-hover: #444444;
+    --surface-hover-alt: #454545;
+    --surface-row-alt: #404040;
+
+    --border-colour: #565656;
+    --border-muted: #4a4a4a;
+    --border-faint: #666666;
+    --scrollbar-thumb: #5c5c5c;
+
+    --grid-line-colour: #333;
+    --on-accent-text: #1e1e1e;
+    --gate-label-colour: #f3f3f3;
+    --node-notch-colour: #1e1e1e;
+
+    --off-colour: #600000;
+    --on-colour: #ff0000be;
+
+    --and-accent: #4C8B77;
+    --or-accent: #D99A46;
+    --not-accent: #6E7A85;
+    --nand-accent: #C97B63;
+    --nor-accent: #4E8FA6;
+    --xor-accent: #B569A0;
+    --xnor-accent: #A6A64C;
+
+    --input-accent: #D9B44C;
+    --output-accent: #4CA6D9;
+    --danger-accent: #C24B4B;
+    --table-accent: #8E6FD9;
+    --delete-accent: #E0704F;
+    --equation-accent: #D9587A;
+
+    --mono-font: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --grid-size: 25px;
+}
+:root[data-theme="light"] {
+    --background-colour: #e9edf1;
+    --panel-colour: #ffffff;
+    --text-colour: #20242a;
+    --text-muted: #6b7280;
+    --text-secondary: #3d434a;
+    --text-tertiary: #565d66;
+
+    --surface-1: #f1f3f5;
+    --surface-2: #e7e9ec;
+    --surface-3: #dde0e4;
+    --surface-raised: #ffffff;
+    --surface-hover: #e2e5e9;
+    --surface-hover-alt: #e8eaed;
+    --surface-row-alt: #f4f5f7;
+
+    --border-colour: #d6dade;
+    --border-muted: #e1e4e8;
+    --border-faint: #c3c8cd;
+    --scrollbar-thumb: #c7cbd1;
+
+    --grid-line-colour: #dde1e5;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body { 
+    font-family: 'Outfit', sans-serif;
+    background-color: var(--background-colour);
+    color: var(--text-colour)
+}
+
+.panel {
+    background-color: var(--panel-colour);
+    border-radius: 20px;
+    min-width: 0;  /* lets grid/flex children shrink below their content size instead of overflowing */
+    min-height: 0;
+}
+.panels-container { 
+    display: grid;
+    height: 100vh;
+    min-height: 480px;
+    grid-template-columns: clamp(180px, 22vw, 250px) 1fr;
+    grid-template-rows: clamp(52px, 8vh, 75px) minmax(220px, 4fr) minmax(150px, 1fr);
+    grid-template-areas: 
+        "heading top-bar"
+        "side-bar workspace"
+        "side-bar bottom-bar";
+    gap: clamp(10px, 2vw, 25px);
+    padding: clamp(10px, 2vw, 20px);
+}
+#heading {
+    grid-area: heading;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    font-size: clamp(17px, 1.6vw, 24px);
+    color: var(--text-colour);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.brand-name {
+    font-family: var(--mono-font);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+.brand-tagline {
+    font-family: var(--mono-font);
+    font-size: 0.5em;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+#top-bar {
+    grid-area: top-bar;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 0 18px;
+}
+
+/* Mode switcher */
+
+.mode-switcher {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow-x: auto;
+    min-width: 0;
+}
+.mode-switcher::-webkit-scrollbar {
+    display: none;
+}
+
+.mode-btn {
+    --accent: #888888;
+
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: var(--surface-1);
+    border: 1px solid var(--border-colour);
+    border-radius: 20px;
+    color: var(--text-colour);
+    font-family: var(--mono-font);
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    outline: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+.mode-btn:hover {
+    background-color: var(--surface-hover);
+    box-shadow: 0 0 0 1px var(--accent) inset, 0 6px 16px -8px var(--accent);
+}
+.mode-btn:active {
+    transform: scale(0.97);
+}
+.mode-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+.mode-btn.is-active {
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent-text);
+}
+.mode-btn.is-active .mode-icon {
+    color: var(--on-accent-text);
+}
+
+.mode-btn--freebuild { --accent: var(--and-accent); }
+.mode-btn--learn { --accent: var(--input-accent); }
+.mode-btn--challenge { --accent: var(--xor-accent); }
+.mode-btn.is-locked {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+.mode-btn.is-locked:hover {
+    background-color: var(--surface-1);
+    box-shadow: none;
+}
+.mode-btn.is-locked:active {
+    transform: none;
+}
+.mode-lock-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    flex: none;
+    border-radius: 50%;
+    background-color: var(--surface-3);
+    border: 1.5px solid var(--text-muted);
+    color: var(--text-muted);
+}
+.mode-lock-badge svg {
+    width: 9px;
+    height: 9px;
+}
+.mode-lock-badge path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.mode-icon {
+    flex: none;
+    width: 18px;
+    height: 18px;
+    color: var(--accent);
+}
+.mode-icon path,
+.mode-icon circle {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* ---- Settings button (cog) ---- */
+
+.settings-btn {
+    --accent: var(--not-accent);
+
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background-color: var(--surface-1);
+    border: 1.5px solid var(--border-colour);
+    color: var(--accent);
+    cursor: pointer;
+    outline: none;
+    transition: transform 0.2s ease, box-shadow 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+}
+.settings-btn:hover {
+    background-color: var(--surface-hover);
+    border-color: var(--accent);
+    transform: rotate(30deg);
+    box-shadow: 0 0 0 1px var(--accent) inset, 0 6px 16px -8px var(--accent);
+}
+.settings-btn:active {
+    transform: rotate(30deg) scale(0.92);
+}
+.settings-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+.settings-icon {
+    width: 20px;
+    height: 20px;
+}
+.settings-icon path,
+.settings-icon circle {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* Settings panel */
+
+
+.settings-backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.55);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 1500;
+}
+.settings-backdrop.is-open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.settings-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 65%;
+    min-width: 320px;
+    max-width: 640px;
+    background-color: var(--surface-raised);
+    border-left: 1px solid var(--border-colour);
+    box-shadow: -12px 0 40px -12px rgba(0, 0, 0, 0.65);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: 1501;
+}
+.settings-panel.is-open {
+    transform: translateX(0);
+}
+.settings-panel::-webkit-scrollbar {
+    width: 8px;
+}
+.settings-panel::-webkit-scrollbar-track {
+    background: transparent;
+}
+.settings-panel::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb);
+    border-radius: 4px;
+}
+
+.settings-panel-header {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 28px;
+    background-color: var(--surface-3);
+    border-bottom: 1px solid var(--surface-hover);
+}
+.settings-panel-title {
+    font-family: var(--mono-font);
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: 0.06em;
+    color: var(--text-colour);
+}
+.settings-panel-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid var(--border-faint);
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    outline: none;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.settings-panel-close:hover {
+    background-color: var(--surface-1);
+    border-color: var(--danger-accent);
+    color: var(--danger-accent);
+}
+.settings-panel-close:focus-visible {
+    outline: 2px solid var(--danger-accent);
+    outline-offset: 2px;
+}
+
+.settings-panel-body {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding: 26px 28px 40px;
+}
+
+.settings-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.settings-section-label {
+    font-family: var(--mono-font);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding-left: 2px;
+}
+
+.settings-option-btn {
+    --accent: var(--not-accent);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px 16px;
+    background-color: var(--surface-2);
+    border: 1px solid var(--border-muted);
+    border-left: 4px solid var(--accent);
+    border-radius: 6px;
+    color: var(--text-colour);
+    font-family: var(--mono-font);
+    cursor: pointer;
+    text-align: left;
+    outline: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+.settings-option-btn:hover {
+    background-color: var(--surface-1);
+    transform: translateX(3px);
+    box-shadow: 0 0 0 1px var(--accent) inset, 0 6px 16px -8px var(--accent);
+}
+.settings-option-btn:active {
+    transform: translateX(3px) scale(0.98);
+}
+.settings-option-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.settings-option-btn--theme { --accent: var(--input-accent); }
+.settings-option-btn--grid { --accent: var(--output-accent); }
+.settings-option-btn--speed { --accent: var(--and-accent); }
+.settings-option-btn--shortcuts { --accent: var(--xor-accent); }
+.settings-option-btn--about { --accent: var(--table-accent); }
+
+.settings-option-label {
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+}
+.settings-option-value {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+}
+
+/* ---- Grid Snap Size row ---- */
+.settings-option-row {
+    --accent: var(--output-accent);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 10px;
+    box-sizing: border-box;
+    padding: 13px 16px;
+    background-color: var(--surface-2);
+    border: 1px solid var(--border-muted);
+    border-left: 4px solid var(--accent);
+    border-radius: 6px;
+}
+
+.grid-scale-group {
+    display: flex;
+    gap: 6px;
+}
+
+.grid-scale-btn {
+    padding: 5px 11px;
+    background-color: var(--surface-1);
+    border: 1px solid var(--border-colour);
+    border-radius: 5px;
+    color: var(--text-secondary);
+    font-family: var(--mono-font);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    outline: none;
+    transition: transform 0.15s ease, background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.grid-scale-btn:hover {
+    background-color: var(--surface-hover);
+}
+.grid-scale-btn:active {
+    transform: scale(0.94);
+}
+.grid-scale-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+.grid-scale-btn.is-active {
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent-text);
+}
+
+/* ---- Keyboard Shortcuts (expand/collapse) ---- */
+
+.settings-option-chevron {
+    width: 16px;
+    height: 16px;
+    flex: 0 0 auto;
+    color: var(--text-muted);
+    transition: transform 0.25s ease;
+}
+.settings-option-chevron path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+.settings-option-btn--shortcuts.is-active .settings-option-chevron {
+    transform: rotate(180deg);
+    color: var(--xor-accent);
+}
+.settings-option-btn--about.is-active .settings-option-chevron {
+    transform: rotate(180deg);
+    color: var(--table-accent);
+}
+
+.shortcuts-panel {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.shortcuts-panel-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+    padding: 14px 16px;
+    background-color: var(--surface-3);
+    border: 1px solid var(--border-muted);
+    border-left: 4px solid var(--xor-accent);
+    border-radius: 6px;
+}
+.shortcut-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+}
+.shortcut-keys {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex: 0 0 auto;
+}
+.shortcut-keys kbd {
+    font-family: var(--mono-font);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    padding: 3px 7px;
+    background-color: var(--surface-1);
+    border: 1px solid var(--border-colour);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    color: var(--text-secondary);
+}
+.shortcut-plus {
+    color: var(--text-muted);
+    font-size: 11px;
+}
+.shortcut-desc {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    text-align: right;
+}
+.shortcuts-panel-note {
+    font-size: 11px;
+    color: var(--text-muted);
+    padding-top: 4px;
+    margin-top: 2px;
+    border-top: 1px solid var(--border-muted);
+}
+
+
+.shortcuts-panel-inner--about {
+    border-left-color: var(--table-accent);
+}
+.about-panel-text {
+    margin: 0;
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: var(--text-tertiary);
+}
+
+@media (max-width: 900px) {
+    .settings-panel {
+        width: 80%;
+        min-width: 0;
+    }
+}
+@media (max-width: 520px) {
+    .settings-panel {
+        width: 100%;
+        max-width: none;
+        border-left: none;
+    }
+    .settings-panel-header {
+        padding: 16px 18px;
+    }
+    .settings-panel-body {
+        padding: 18px 18px 32px;
+        gap: 24px;
+    }
+}
+
+#side-bar {
+    grid-area: side-bar;
+    padding: 18px 14px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+#side-bar::-webkit-scrollbar {
+    width: 8px;
+}
+#side-bar::-webkit-scrollbar-track {
+    background: transparent;
+}
+#side-bar::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb);
+    border-radius: 4px;
+}
+#workspace {
+    position: relative;
+    grid-area: workspace;
+    background-size: var(--grid-size) var(--grid-size);
+    background-image: linear-gradient(to right, var(--grid-line-colour) 1px, transparent 1px), 
+                      linear-gradient(to bottom, var(--grid-line-colour) 1px, transparent 1px);
+    /* Circuits with lots of inputs/outputs (or gates dragged far down)
+       used to just run off the bottom edge with no way to reach them.
+       Scrolling only kicks in once content actually overflows - an
+       empty or small circuit looks exactly as it did before. */
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) transparent;
+}
+#workspace::-webkit-scrollbar {
+    width: 8px;
+}
+#workspace::-webkit-scrollbar-track {
+    background: transparent;
+}
+#workspace::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb);
+    border-radius: 4px;
+}
+#bottom-bar {
+    position: relative;
+    grid-area: bottom-bar;
+}
+
+/* ---- Gate palette (component buttons) ---- */
+
+.gate-palette {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.gate-palette-label {
+    font-family: var(--mono-font);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding-left: 4px;
+    margin-bottom: 2px;
+}
+.gate-palette-label--secondary {
+    margin-top: 6px;
+}
+
+.gate-btn {
+    --gate-accent: #888888;
+
+    position: relative; /* anchors the info button */
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 14px;
+    background-color: var(--surface-1);
+    border: 1px solid var(--border-colour);
+    border-left: 4px solid var(--gate-accent);
+    border-radius: 6px;
+    color: var(--text-colour);
+    cursor: pointer;
+    text-align: left;
+    outline: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.gate-btn:hover {
+    background-color: var(--surface-hover);
+    box-shadow: 0 0 0 1px var(--gate-accent) inset, 0 6px 16px -8px var(--gate-accent);
+}
+
+.gate-btn:active {
+    transform: translateX(3px) scale(0.97);
+}
+
+.gate-btn:focus-visible {
+    outline: 2px solid var(--gate-accent);
+    outline-offset: 2px;
+}
+
+.gate-btn--and { --gate-accent: var(--and-accent); }
+.gate-btn--or { --gate-accent: var(--or-accent); }
+.gate-btn--not { --gate-accent: var(--not-accent); }
+.gate-btn--nand { --gate-accent: var(--nand-accent); }
+.gate-btn--nor { --gate-accent: var(--nor-accent); }
+.gate-btn--xor { --gate-accent: var(--xor-accent); }
+.gate-btn--xnor { --gate-accent: var(--xnor-accent); }
+
+.gate-icon {
+    flex: 0 0 auto;
+    width: 40px;
+    height: 30px;
+    color: var(--gate-accent);
+}
+
+.gate-icon path,
+.gate-icon circle {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.gate-btn-label {
+    flex: 1 1 auto;
+    font-family: var(--mono-font);
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+}
+
+/* ---- Info button on each gate button ---- */
+/* The popover itself is appended to <body> as a fixed-position overlay
+   (see gate-info.js) so it always renders above every panel and never
+   gets clipped or fights for stacking order with the workspace. */
+
+.gate-info-btn {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 18px;
+    height: 18px;
+    flex: none;
+    border-radius: 50%;
+    background-color: var(--surface-3);
+    border: 1.5px solid var(--gate-accent);
+    color: var(--gate-accent);
+    font-family: var(--mono-font);
+    font-size: 11px;
+    font-weight: 700;
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 5;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+}
+.gate-info-btn:hover {
+    background-color: var(--surface-1);
+    transform: scale(1.14);
+}
+.gate-info-btn:focus-visible {
+    outline: 2px solid var(--gate-accent);
+    outline-offset: 2px;
+}
+
+.gate-info-popover {
+    --gate-accent: #888888;
+
+    position: fixed;
+    width: 220px;
+    background-color: var(--surface-2);
+    border: 1px solid var(--gate-accent);
+    border-radius: 8px;
+    padding: 12px 14px;
+    box-shadow: 0 10px 30px -8px rgba(0, 0, 0, 0.6);
+    z-index: 9999;
+    text-align: left;
+    cursor: default;
+}
+.gate-info-popover::before {
+    content: "";
+    position: absolute;
+    top: 14px;
+    left: -6px;
+    width: 10px;
+    height: 10px;
+    background-color: var(--surface-2);
+    border-left: 1px solid var(--gate-accent);
+    border-bottom: 1px solid var(--gate-accent);
+    transform: rotate(45deg);
+}
+.gate-info-popover--flipped::before {
+    left: auto;
+    right: -6px;
+    border-left: none;
+    border-bottom: none;
+    border-right: 1px solid var(--gate-accent);
+    border-top: 1px solid var(--gate-accent);
+}
+
+.gate-info-popover--and { --gate-accent: var(--and-accent); }
+.gate-info-popover--or { --gate-accent: var(--or-accent); }
+.gate-info-popover--not { --gate-accent: var(--not-accent); }
+.gate-info-popover--nand { --gate-accent: var(--nand-accent); }
+.gate-info-popover--nor { --gate-accent: var(--nor-accent); }
+.gate-info-popover--xor { --gate-accent: var(--xor-accent); }
+.gate-info-popover--xnor { --gate-accent: var(--xnor-accent); }
+.gate-info-popover--equation { --gate-accent: var(--equation-accent); }
+.gate-info-popover--truthtable { --gate-accent: var(--table-accent); }
+
+.gate-info-popover-title {
+    font-family: var(--mono-font);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gate-accent);
+    margin-bottom: 6px;
+}
+.gate-info-popover-desc {
+    margin: 0 0 10px 0;
+    font-size: 12.5px;
+    line-height: 1.4;
+    color: var(--text-secondary);
+}
+
+.gate-info-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--mono-font);
+    font-size: 11px;
+}
+.gate-info-table th,
+.gate-info-table td {
+    padding: 4px 6px;
+    text-align: center;
+    border-bottom: 1px solid var(--border-muted);
+    color: var(--text-secondary);
+}
+.gate-info-table th {
+    color: var(--text-muted);
+    font-weight: 600;
+    border-bottom: 2px solid var(--border-colour);
+}
+.gate-info-table td.is-on {
+    color: var(--on-colour);
+    font-weight: 700;
+}
+
+/* ---- +Input / +Output signal controls ---- */
+/* The circle's own position/size are unchanged from before - only its
+   colour/border and the added node-style label tab are new, so the
+   circles stay exactly where they were. */
+
+.addSignal {
+    position: absolute;
+    left: -20px;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--surface-1);
+    border: 2px solid var(--signal-accent, #888888);
+    color: var(--signal-accent, #888888);
+    cursor: pointer;
+    outline: none;
+    z-index: 3;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+.addSignal:hover {
+    background-color: var(--surface-hover-alt);
+   /* transform: scale(1.08); */
+    box-shadow: 0 0 0 1px var(--signal-accent, #888888) inset, 0 6px 16px -6px var(--signal-accent, #888888);
+}
+.addSignal:active {
+    transform: scale(0.95);
+}
+.addSignal:focus-visible {
+    outline: 2px solid var(--signal-accent, #ffffff);
+    outline-offset: 3px;
+}
+
+#addInputButton {
+    position: absolute;
+    top: 20px;
+}
+#addOutputButton {
+    position: absolute;
+    bottom: 20px;
+}
+
+.signal-control--input {
+    --signal-accent: var(--input-accent);
+}
+.signal-control--output {
+    --signal-accent: var(--output-accent);
+}
+
+.signal-icon {
+    width: 20px;
+    height: 20px;
+    color: var(--signal-accent, #888888);
+}
+.signal-icon path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+}
+
+/* The node/label tab, styled like the actual signal nodes elsewhere in
+   the app - a small rectangle "growing" out of the circle, carrying
+   the Input/Output label so the two buttons are never ambiguous. */
+.signal-tab {
+    position: absolute;
+    left: 28px;
+    height: 20px;
+    line-height: 20px;
+    padding: 0 10px 0 14px;
+    border-radius: 0 6px 6px 0;
+    font-family: var(--mono-font);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--signal-accent);
+    background-color: var(--surface-1);
+    border: 1px solid var(--signal-accent);
+    border-left: none;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 2;
+}
+.signal-control--input .signal-tab {
+    top: 35px;
+}
+.signal-control--output .signal-tab {
+    bottom: 35px;
+}
+
+/* ---- Bottom-bar: one scrolling column (actions row + truth table) --- */
+
+.bottom-bar-scroll {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow-y: auto;
+    box-sizing: border-box;
+    border-radius: 20px;
+    padding: 14px 20px 14px 130px;
+    display: flex;
+    flex-direction: column;
+    /* `justify-content: center` alone centers overflowing flex content
+       around its own midpoint, which pushes part of it above
+       scrollTop: 0 - and since scrollTop can never go negative, that
+       portion (the action buttons, when the truth table pushes the
+       column taller than the panel) becomes permanently unreachable.
+       The `flex-start` fallback covers browsers without `safe`
+       support; `safe center` centers only while everything still fits,
+       and falls back to start-alignment (fully scrollable from the
+       top) the moment content overflows. */
+    justify-content: flex-start;
+    justify-content: safe center;
+    gap: 12px;
+}
+.bottom-bar-scroll::-webkit-scrollbar {
+    width: 8px;
+}
+.bottom-bar-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+.bottom-bar-scroll::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb);
+    border-radius: 4px;
+}
+
+.bottom-bar-main {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    gap: 14px;
+}
+
+.action-buttons {
+    flex: 0 0 auto;
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    grid-auto-rows: min-content;
+    align-content: center;
+    gap: 10px;
+}
+
+.action-btn {
+    --accent: #888888;
+
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 14px;
+    background-color: var(--surface-1);
+    border: 1px solid var(--border-colour);
+    border-left: 4px solid var(--accent);
+    border-radius: 6px;
+    color: var(--text-colour);
+    font-family: var(--mono-font);
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    outline: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+.action-btn:hover {
+    background-color: var(--surface-hover);
+    box-shadow: 0 0 0 1px var(--accent) inset, 0 6px 16px -8px var(--accent);
+}
+.action-btn:active {
+    transform: translateY(-2px) scale(0.97);
+}
+.action-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.action-btn--danger { --accent: var(--danger-accent); }
+.action-btn--table { --accent: var(--table-accent); --gate-accent: var(--table-accent); }
+.action-btn--equation { --accent: var(--equation-accent); --gate-accent: var(--equation-accent); }
+.action-btn--delete { --accent: var(--delete-accent); }
+
+/* Pressed/"on" state for toggleable action buttons (currently just
+   delete mode) - filled with the accent colour so it reads clearly as
+   active rather than merely hovered. */
+.action-btn.is-active {
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent-text);
+}
+.action-btn.is-active:hover {
+    background-color: var(--accent);
+    transform: translateY(-2px);
+}
+.action-btn.is-active .action-icon {
+    color: var(--on-accent-text);
+}
+
+.action-icon {
+    width: 18px;
+    height: 18px;
+    color: var(--accent);
+}
+.action-icon path,
+.action-icon rect {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* ---- Boolean equation panel ---- */
+
+.equation-panel {
+    flex: 0 1 480px;
+    min-width: 260px;
+    max-width: 480px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+    background-color: var(--surface-1);
+    border: 1px solid var(--border-colour);
+    border-left: 4px solid var(--equation-accent);
+    border-radius: 8px;
+    padding: 10px 16px;
+}
+
+.equation-panel-header {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+}
+.equation-panel.is-active .equation-panel-header {
+    display: flex;
+}
+
+.equation-panel-title {
+    font-family: var(--mono-font);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--equation-accent);
+}
+
+.equation-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid var(--border-faint);
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 13px;
+    line-height: 1;
+    cursor: pointer;
+    outline: none;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.equation-close:hover {
+    background-color: var(--surface-hover-alt);
+    border-color: var(--equation-accent);
+    color: var(--equation-accent);
+}
+.equation-close:focus-visible {
+    outline: 2px solid var(--equation-accent);
+    outline-offset: 2px;
+}
+
+.equation-body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    overflow-x: auto;
+}
+
+.equation-placeholder {
+    margin: 0;
+    font-family: var(--mono-font);
+    font-size: 12px;
+    color: var(--text-tertiary);
+    line-height: 1.4;
+}
+
+.equation-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    font-family: var(--mono-font);
+    white-space: nowrap;
+}
+
+.equation-label {
+    flex: 0 0 auto;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    color: var(--output-accent);
+}
+
+.equation-op {
+    flex: 0 0 auto;
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+.equation-expr {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--text-colour);
+}
+
+.truth-table-wrapper {
+    display: none;
+    flex: 0 0 auto;
+    flex-direction: column;
+    background-color: var(--surface-1);
+    border: 1px solid var(--border-colour);
+    border-radius: 8px;
+    overflow: hidden;
+}
+.truth-table-wrapper.is-visible {
+    display: flex;
+}
+
+.truth-table-toolbar {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 14px;
+    background-color: var(--surface-2);
+    border-bottom: 1px solid var(--border-colour);
+}
+.truth-table-title {
+    font-family: var(--mono-font);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--table-accent);
+}
+.truth-table-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid var(--border-faint);
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    outline: none;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.truth-table-close:hover {
+    background-color: var(--surface-hover-alt);
+    border-color: var(--danger-accent);
+    color: var(--danger-accent);
+}
+.truth-table-close:focus-visible {
+    outline: 2px solid var(--danger-accent);
+    outline-offset: 2px;
+}
+
+.truth-table-empty {
+    margin: 0;
+    padding: 14px;
+    font-family: var(--mono-font);
+    font-size: 12px;
+    color: var(--text-tertiary);
+}
+
+.truth-table-scroll {
+    overflow-x: auto;
+    max-width: 100%;
+}
+.truth-table-scroll::-webkit-scrollbar {
+    height: 8px;
+}
+.truth-table-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+.truth-table-scroll .truth-table {
+    width: auto;
+    min-width: 100%;
+}
+
+.truth-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--mono-font);
+    font-size: 12px;
+}
+.truth-table thead th {
+    background-color: var(--surface-2);
+    color: var(--text-colour);
+    padding: 8px 12px;
+    text-align: center;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid var(--border-colour);
+}
+.truth-table thead th.truth-table-output-col {
+    color: var(--table-accent);
+}
+.truth-table tbody td {
+    padding: 6px 12px;
+    text-align: center;
+    border-bottom: 1px solid var(--border-muted);
+    color: var(--text-secondary);
+}
+.truth-table tbody tr:nth-child(even) {
+    background-color: var(--surface-row-alt);
+}
+.truth-table td.is-on {
+    color: var(--on-colour);
+    font-weight: 700;
+}
+
+.input-signals {
+    position: relative;
+    top: 0;
+    height: var(--grid-size);
+    width: var(--grid-size);
+    border-radius: 50%;
+    color: var(--gate-label-colour);
+
+    text-align: center;
+    line-height: var(--grid-size);
+    user-select: none;
+}
+.signal-label {
+    pointer-events: none;
+}
+
+.input-signal-node,
+.output-signal-node {
+    position: absolute;
+    height: calc(var(--grid-size) * 0.4);
+    width: calc(var(--grid-size) * 0.4);
+    top: calc(var(--grid-size) * 0.3);
+    border-radius: 3px;
+}
+.input-signal-node {
+    right: calc(var(--grid-size) * -0.2);
+}
+.output-signals{
+    position: absolute;
+    top: 0;
+    height: var(--grid-size);
+    width: var(--grid-size);
+    border-radius: 50%;
+    background-color: var(--on-colour);
+    color: var(--gate-label-colour);
+    text-align: center;
+    line-height: var(--grid-size);
+    user-select: none;
+}
+.output-signal-node {
+    left: calc(var(--grid-size) * -0.2);
+}
+
+.and-Gate,
+.or-Gate,
+.nand-Gate,
+.nor-Gate,
+.xor-Gate,
+.xnor-Gate {
+    position: absolute;
+    height: calc(var(--grid-size) * 2);
+    width: calc(var(--grid-size) * 3);
+    border-radius: 5px;
+    color: var(--gate-label-colour);
+    user-select: none;
+    text-align: center;
+    line-height: calc(var(--grid-size) * 2);
+    z-index: 2;
+}
+.not-Gate {
+    position: absolute;
+    height: calc(var(--grid-size) * 2);
+    width: calc(var(--grid-size) * 2);
+    background-color: #3A3F44;
+    border-radius: 5px;
+    color: var(--gate-label-colour);
+    user-select: none;
+    text-align: center;
+    line-height: calc(var(--grid-size) * 2);
+    z-index: 2;
+}
+.and-Gate { background-color: #3D6B5E; z-index: 1; }
+.or-Gate { background-color: #B87C2E; }
+.nand-Gate { background-color: #8F4F3B; }
+.nor-Gate { background-color: #33606E; }
+.xor-Gate { background-color: #7C4570; }
+.xnor-Gate { background-color: #6E6E30; }
+
+.inputNodeTop,
+.inputNodeBottom,
+.inputNodeSingle,
+.outputNode {
+    position: absolute;
+    height: calc(var(--grid-size) * 0.4);
+    width: calc(var(--grid-size) * 0.4);
+    background-color: var(--node-notch-colour);
+    border-radius: 5px;
+}
+.inputNodeTop {
+    top: calc(var(--grid-size) * -0.2);
+    left: calc(var(--grid-size) * -0.2);
+}
+.inputNodeBottom {
+    bottom: calc(var(--grid-size) * -0.2);
+    left: calc(var(--grid-size) * -0.2);
+}
+.inputNodeSingle {
+    top: calc(var(--grid-size) - (var(--grid-size) * 0.2));
+    left: calc(var(--grid-size) * -0.2);
+}
+.outputNode {
+    top: calc(var(--grid-size) - (var(--grid-size) * 0.2));
+    right: calc(var(--grid-size) * -0.2);
+}
+/* ---- Delete mode ---- */
+
+#workspace.delete-mode {
+    cursor: crosshair;
+}
+
+#workspace.delete-mode .and-Gate:hover,
+#workspace.delete-mode .or-Gate:hover,
+#workspace.delete-mode .not-Gate:hover,
+#workspace.delete-mode .nand-Gate:hover,
+#workspace.delete-mode .nor-Gate:hover,
+#workspace.delete-mode .xor-Gate:hover,
+#workspace.delete-mode .xnor-Gate:hover,
+#workspace.delete-mode .input-signals:hover,
+#workspace.delete-mode .output-signals:hover {
+    outline: 2px solid var(--delete-accent);
+    outline-offset: 3px;
+    filter: brightness(0.8);
+    cursor: pointer;
+}
+
+
+   one column and turn the gate palette into a horizontal strip ---- */
+@media (max-width: 900px) {
+    .panels-container {
+        grid-template-columns: 1fr;
+        grid-template-rows:
+            clamp(44px, 7vh, 60px)
+            auto
+            clamp(64px, 12vh, 92px)
+            minmax(200px, 1fr)
+            minmax(160px, 32vh);
+        grid-template-areas:
+            "heading"
+            "top-bar"
+            "side-bar"
+            "workspace"
+            "bottom-bar";
+    }
+
+    #top-bar {
+        padding: 0 10px;
+    }
+
+    .brand-tagline {
+        display: none; /* the name alone is enough once space is tight */
+    }
+
+    #side-bar {
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 10px 14px;
+    }
+    #side-bar::-webkit-scrollbar {
+        height: 8px;
+        width: 8px;
+    }
+
+    .gate-palette {
+        flex-direction: row;
+        align-items: stretch;
+        gap: 10px;
+        height: 100%;
+    }
+    .gate-palette-label {
+        display: none; /* section dividers only make sense in a vertical list */
+    }
+
+    .gate-btn {
+        width: auto;
+        flex: 0 0 auto;
+        min-width: 148px;
+    }
+
+    /* The +Input/+Output circles were still using their desktop 50px
+       size with 20px top/bottom offsets (20 + 50 + 20 = 90px needed),
+       but this breakpoint's bottom-bar row can shrink down to 64px -
+       so the circles were clipping/overlapping depending on viewport
+       height. Shrinking the circle and tightening the offset together
+       (9 + 42 + 9 = 60px) keeps them fully inside the smallest row
+       height this breakpoint allows. */
+    .addSignal {
+        left: 8px;
+        width: 42px;
+        height: 42px;
+    }
+    #addInputButton {
+        top: 9px;
+    }
+    #addOutputButton {
+        bottom: 9px;
+    }
+    .signal-control--input .signal-tab {
+        top: 30px;
+    }
+    .signal-control--output .signal-tab {
+        bottom: 30px;
+    }
+
+    .bottom-bar-scroll {
+        padding-left: 96px;
+    }
+
+    .bottom-bar-main {
+        flex-direction: column;
+    }
+
+
+    .equation-panel {
+        flex: 0 1 auto;
+        width: 100%;
+        min-width: 0;
+        max-width: 480px;
+    }
+
+    .action-buttons {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* ---- Phones / very narrow windows: tighten everything further ---- */
+@media (max-width: 520px) {
+    .panels-container {
+        gap: 8px;
+        padding: 8px;
+        grid-template-rows:
+            40px
+            auto
+            clamp(60px, 14vh, 84px)
+            minmax(180px, 1fr)
+            minmax(180px, 38vh);
+    }
+
+    #heading {
+        font-size: 15px;
+    }
+
+    .mode-btn-label {
+        display: none; /* icon-only once space is tight, same pattern as .action-btn-label */
+    }
+    .mode-btn {
+        padding: 8px 10px;
+    }
+    .settings-btn {
+        width: 34px;
+        height: 34px;
+    }
+
+    .gate-btn {
+        min-width: 118px;
+        padding: 8px 10px;
+        gap: 8px;
+    }
+    .gate-icon {
+        width: 30px;
+        height: 22px;
+    }
+    .gate-btn-label {
+        font-size: 12px;
+    }
+
+    .action-btn {
+        padding: 8px 10px;
+        font-size: 11px;
+    }
+    .action-btn-label {
+        display: none; /* icon-only on very small screens; each button already carries an aria-label so its name is still announced */
+    }
+
+    .addSignal {
+        width: 40px;
+        height: 40px;
+        left: 6px;
+    }
+    .signal-tab {
+        font-size: 10px;
+        padding: 0 8px 0 10px;
+    }
+    /* Tab offsets are tuned against the desktop 50px circle; re-centre
+       them against this breakpoint's smaller 40px circle so the label
+       pill lines up with its circle instead of sitting off-centre. */
+    .signal-control--input .signal-tab {
+        top: 30px;
+    }
+    .signal-control--output .signal-tab {
+        bottom: 30px;
+    }
+    .bottom-bar-scroll {
+        padding: 10px 12px 10px 78px;
+    }
+
+    .action-buttons {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .equation-panel {
+        padding: 8px 12px;
+    }
+    .equation-label,
+    .equation-op {
+        font-size: 12px;
+    }
+    .equation-expr {
+        font-size: 13px;
+    }
+}
+
+/* ---- Short viewports (e.g. a laptop window shrunk vertically, or a
+   landscape tablet/phone): claw back vertical space regardless of
+   width, and lean on each panel's own scroll region for the rest ---- */
+@media (max-height: 640px) {
+    .panels-container {
+        grid-template-rows: 44px minmax(160px, 1fr) minmax(130px, 34vh);
+        gap: clamp(8px, 1.5vh, 16px);
+        padding: clamp(8px, 1.5vh, 14px);
+    }
+}
+@media (max-height: 640px) and (max-width: 900px) {
+    .panels-container {
+        grid-template-rows: 36px auto clamp(52px, 10vh, 72px) minmax(150px, 1fr) minmax(120px, 30vh);
+    }
+}

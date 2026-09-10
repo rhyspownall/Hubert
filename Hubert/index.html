@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Hubert</title>
+    <script>
+        // Applied here (rather than waiting for settings.js) so the
+        // page never paints a frame of the wrong theme/grid size
+        // before switching to the saved one.
+        (function () {
+            try {
+                var theme = localStorage.getItem("hubert-theme");
+                if (theme === "light") {
+                    document.documentElement.setAttribute("data-theme", "light");
+                }
+                var gridSize = parseInt(localStorage.getItem("hubert-grid-size"), 10);
+                if (gridSize && [20, 25, 30].includes(gridSize)) {
+                    document.documentElement.style.setProperty("--grid-size", gridSize + "px");
+                }
+            } catch (e) {
+                // localStorage can throw in locked-down contexts (e.g. private
+                // browsing in some browsers) - just fall back to the defaults.
+            }
+        })();
+    </script>
+</head>
+
+<body>
+    <div class="panels-container">
+        <section id="heading">
+            <span class="brand-name">Hubert</span>
+            <span class="brand-tagline">Circuit Builder</span>
+        </section>
+
+        <section class="panel" id="top-bar">
+            <div class="mode-switcher" id="modeSwitcher" role="group" aria-label="App mode">
+                <button class="mode-btn mode-btn--freebuild is-active" id="freeBuildModeButton" data-mode="free-build" aria-pressed="true">
+                    <svg class="mode-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M4,4 H10 V10 H4 Z M14,4 H20 V10 H14 Z M4,14 H10 V20 H4 Z M14,14 H20 V20 H14 Z" />
+                    </svg>
+                    <span class="mode-btn-label">Free Build</span>
+                </button>
+
+                <button class="mode-btn mode-btn--learn is-locked" id="learnModeButton" data-mode="learn" aria-pressed="false" aria-disabled="true" aria-label="Learn mode (coming soon)" title="Coming soon">
+                    <svg class="mode-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M4,6 C7,4.3 10,4.3 12,6 V19 C10,17.3 7,17.3 4,19 Z M20,6 C17,4.3 14,4.3 12,6 V19 C14,17.3 17,17.3 20,19 Z" />
+                    </svg>
+                    <span class="mode-btn-label">Learn</span>
+                    <span class="mode-lock-badge" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M7,11 V8 A5,5 0 0 1 17,8 V11 M5,11 H19 V21 H5 Z" />
+                        </svg>
+                    </span>
+                </button>
+
+                <button class="mode-btn mode-btn--challenge is-locked" id="challengeModeButton" data-mode="challenge" aria-pressed="false" aria-disabled="true" aria-label="Challenge mode (coming soon)" title="Coming soon">
+                    <svg class="mode-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M7,4 H17 V8 A5,5 0 0 1 7,8 Z M7,5 H4 V7 A3,3 0 0 0 7,10 M17,5 H20 V7 A3,3 0 0 1 17,10 M12,13 V17 M9,20 H15" />
+                    </svg>
+                    <span class="mode-btn-label">Challenge</span>
+                    <span class="mode-lock-badge" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M7,11 V8 A5,5 0 0 1 17,8 V11 M5,11 H19 V21 H5 Z" />
+                        </svg>
+                    </span>
+                </button>
+            </div>
+
+            <button class="settings-btn" id="settingsButton" aria-label="Settings" aria-haspopup="dialog" aria-expanded="false" title="Settings">
+                <svg class="settings-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M10.89,5.7 L10.4,2.94 L13.6,2.94 L13.11,5.7 L15.67,6.76 L17.28,4.46 L19.54,6.72 L17.24,8.33 L18.3,10.89 L21.06,10.4 L21.06,13.6 L18.3,13.11 L17.24,15.67 L19.54,17.28 L17.28,19.54 L15.67,17.24 L13.11,18.3 L13.6,21.06 L10.4,21.06 L10.89,18.3 L8.33,17.24 L6.72,19.54 L4.46,17.28 L6.76,15.67 L5.7,13.11 L2.94,13.6 L2.94,10.4 L5.7,10.89 L6.76,8.33 L4.46,6.72 L6.72,4.46 L8.33,6.76 Z" />
+                    <circle cx="12" cy="12" r="3.2" />
+                </svg>
+            </button>
+        </section>
+
+        <section class="panel" id="side-bar">
+            <div class="gate-palette">
+                <span class="gate-palette-label">Basic Gates</span>
+
+                <button class="gate-btn gate-btn--and" id="addANDButton">
+                    <svg class="gate-icon" viewBox="0 0 44 34" aria-hidden="true">
+                        <path d="M0,11 H6 M0,23 H6 M6,5 H24 A12,12 0 0 1 24,29 H6 Z M36,17 H44" />
+                    </svg>
+                    <span class="gate-btn-label">AND</span>
+                    <span class="gate-info-btn" data-gate-type="AND" role="button" tabindex="0" aria-label="About the AND gate">i</span>
+                </button>
+
+                <button class="gate-btn gate-btn--or" id="addORButton">
+                    <svg class="gate-icon" viewBox="0 0 44 34" aria-hidden="true">
+                        <path d="M0,11 H8 M0,23 H8 M8,5 Q20,5 34,17 Q20,29 8,29 Q16,17 8,5 Z M34,17 H44" />
+                    </svg>
+                    <span class="gate-btn-label">OR</span>
+                    <span class="gate-info-btn" data-gate-type="OR" role="button" tabindex="0" aria-label="About the OR gate">i</span>
+                </button>
+
+                <button class="gate-btn gate-btn--not" id="addNOTButton">
+                    <svg class="gate-icon" viewBox="0 0 44 34" aria-hidden="true">
+                        <path d="M0,17 H8 M8,5 L8,29 L32,17 Z M40,17 H44" />
+                        <circle cx="36" cy="17" r="4" />
+                    </svg>
+                    <span class="gate-btn-label">NOT</span>
+                    <span class="gate-info-btn" data-gate-type="NOT" role="button" tabindex="0" aria-label="About the NOT gate">i</span>
+                </button>
+
+                <span class="gate-palette-label gate-palette-label--secondary">Derived Gates</span>
+
+                <button class="gate-btn gate-btn--nand" id="addNANDButton">
+                    <svg class="gate-icon" viewBox="0 0 44 34" aria-hidden="true">
+                        <path d="M0,11 H6 M0,23 H6 M6,5 H18 A12,12 0 0 1 18,29 H6 Z M36,17 H44" />
+                        <circle cx="33" cy="17" r="3" />
+                    </svg>
+                    <span class="gate-btn-label">NAND</span>
+                    <span class="gate-info-btn" data-gate-type="NAND" role="button" tabindex="0" aria-label="About the NAND gate">i</span>
+                </button>
+
+                <button class="gate-btn gate-btn--nor" id="addNORButton">
+                    <svg class="gate-icon" viewBox="0 0 44 34" aria-hidden="true">
+                        <path d="M0,11 H8 M0,23 H8 M8,5 Q20,5 30,17 Q20,29 8,29 Q15,17 8,5 Z M36,17 H44" />
+                        <circle cx="33" cy="17" r="3" />
+                    </svg>
+                    <span class="gate-btn-label">NOR</span>
+                    <span class="gate-info-btn" data-gate-type="NOR" role="button" tabindex="0" aria-label="About the NOR gate">i</span>
+                </button>
+
+                <button class="gate-btn gate-btn--xor" id="addXORButton">
+                    <svg class="gate-icon" viewBox="0 0 44 34" aria-hidden="true">
+                        <path d="M0,11 H6 M0,23 H6 M4,5 Q12,17 4,29 M8,5 Q20,5 34,17 Q20,29 8,29 Q16,17 8,5 Z M34,17 H44" />
+                    </svg>
+                    <span class="gate-btn-label">XOR</span>
+                    <span class="gate-info-btn" data-gate-type="XOR" role="button" tabindex="0" aria-label="About the XOR gate">i</span>
+                </button>
+
+                <button class="gate-btn gate-btn--xnor" id="addXNORButton">
+                    <svg class="gate-icon" viewBox="0 0 44 34" aria-hidden="true">
+                        <path d="M0,11 H6 M0,23 H6 M4,5 Q12,17 4,29 M8,5 Q20,5 30,17 Q20,29 8,29 Q15,17 8,5 Z M36,17 H44" />
+                        <circle cx="33" cy="17" r="3" />
+                    </svg>
+                    <span class="gate-btn-label">XNOR</span>
+                    <span class="gate-info-btn" data-gate-type="XNOR" role="button" tabindex="0" aria-label="About the XNOR gate">i</span>
+                </button>
+            </div>
+        </section>
+
+        <section class="panel" id="workspace">
+            <canvas id="workspace-canvas"></canvas>
+        </section>
+
+        <section class="panel" id="bottom-bar">
+            <div class="signal-control signal-control--input">
+                <button class="addSignal" id="addInputButton" title="Add input signal" aria-label="Add input signal">
+                    <svg class="signal-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12,5 V19 M5,12 H19" />
+                    </svg>
+                </button>
+                <span class="signal-tab">Input</span>
+            </div>
+            <div class="signal-control signal-control--output">
+                <button class="addSignal" id="addOutputButton" title="Add output signal" aria-label="Add output signal">
+                    <svg class="signal-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12,5 V19 M5,12 H19" />
+                    </svg>
+                </button>
+                <span class="signal-tab">Output</span>
+            </div>
+
+            <div class="bottom-bar-scroll">
+                <div class="bottom-bar-main">
+                    <div class="equation-panel" id="equationPanel">
+                        <div class="equation-panel-header">
+                            <span class="equation-panel-title">Boolean Equation</span>
+                            <button class="equation-close" id="equationClose" aria-label="Close equation panel">&times;</button>
+                        </div>
+                        <div class="equation-body" id="equationBody">
+                            <p class="equation-placeholder">Build a circuit and hit "Create Equation" to see its boolean algebra expression here.</p>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="action-btn action-btn--danger" id="clearCanvas" aria-label="Clear canvas">
+                            <svg class="action-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M5,5 L19,19 M19,5 L5,19" />
+                            </svg>
+                            <span class="action-btn-label">Clear Canvas</span>
+                        </button>
+                        <button class="action-btn action-btn--delete" id="deleteModeButton" aria-pressed="false" aria-label="Toggle delete mode: click a gate, signal, or wire to remove it">
+                            <svg class="action-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M4,7 H20 M9,7 V4.5 H15 V7 M6.5,7 L7.5,20 H16.5 L17.5,7 M10,10.5 V16.5 M14,10.5 V16.5" />
+                            </svg>
+                            <span class="action-btn-label">Delete</span>
+                        </button>
+                        <button class="action-btn action-btn--equation" id="createEquationButton" aria-label="Create boolean equation">
+                            <svg class="action-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M5,7 H12 M5,12 H10 M15,6 C13,6 13,9 15,10.5 C17,12 17,15 15,15 M15,18 H20" />
+                            </svg>
+                            <span class="action-btn-label">Create Equation</span>
+                            <span class="gate-info-btn" data-gate-type="EQUATION" role="button" tabindex="0" aria-label="About the boolean equation feature">i</span>
+                        </button>
+                        <button class="action-btn action-btn--table" id="createTruthTable" aria-label="Create truth table">
+                            <svg class="action-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <rect x="3" y="3" width="18" height="18" rx="2" />
+                                <path d="M3,9 H21 M3,15 H21 M9,3 V21 M15,3 V21" />
+                            </svg>
+                            <span class="action-btn-label">Create Truth Table</span>
+                            <span class="gate-info-btn" data-gate-type="TRUTHTABLE" role="button" tabindex="0" aria-label="About the truth table feature">i</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="truth-table-wrapper" id="truthTableWrapper"></div>
+            </div>
+        </section>
+    </div>
+</body>
+
+
+    <script type="module" src="main.js"></script>
+</html>
