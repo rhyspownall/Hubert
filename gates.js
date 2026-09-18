@@ -20,10 +20,6 @@ function rectsOverlap(x1, y1, w1, h1, x2, y2, w2, h2) {
     return x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2;
 }
 
-// Picks the next id of the form `${type}${n}` that isn't already in use.
-// A plain "count of this type + 1" would collide once a gate has been
-// deleted (e.g. deleting AND1 while AND2 still exists, then adding a
-// new AND gate would otherwise try to reuse the id "AND2").
 function nextGateId(type) {
     let n = gates.filter(g => g.type === type).length + 1;
     while (gates.some(g => g.id === `${type}${n}`)) n++;
@@ -40,9 +36,6 @@ function isPositionFree(x, y, w, h) {
     });
 }
 
-// Picks a random grid-snapped spot that doesn't overlap an existing
-// gate. Falls back to the last tried spot if it can't find a free one
-// within a reasonable number of attempts (e.g. workspace is crowded).
 function findFreePosition(w, h) {
     let x, y, tries = 0;
     do {
@@ -52,11 +45,6 @@ function findFreePosition(w, h) {
     } while (!isPositionFree(x, y, w, h) && tries < 100);
     return { x, y };
 }
-
-// ---- Two-input gates (AND, OR, NAND, NOR, XOR, XNOR) ----------------
-// They all share the same shape (two inputs, one output), so a single
-// creator/renderer is reused for all six instead of repeating the same
-// DOM-building code over and over.
 
 function bindTwoInputGateButton(button, type, renderFn) {
     button.addEventListener("click", () => {
