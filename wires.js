@@ -678,5 +678,9 @@ function createWire(fromInfo, toInfo) {
         state: false
     };
 
+    // Only mark it fresh in normal mode, so a wire drawn in instant
+    // mode doesn't animate later when the setting is switched.
+    if (simulationSpeed !== "instant") freshWires.add(newWire);
+
     wires.push(newWire);
 }
